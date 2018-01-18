@@ -1,0 +1,9 @@
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/install/strip.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/install.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/list_install_components.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/rebuild_cache.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/edit_cache.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/install/local.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/test.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/Taskly.dir
+/Users/Jarred/Desktop/Programming/Taskly/build/CMakeFiles/TasklyLib.dir

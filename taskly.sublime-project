@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"_install",
+				"build"
+			],
+			"file_exclude_patterns":
+			[
+				"*.sln",
+				"*.vcxproj",
+				"*.filters"
+			],
+			"path": "."
+		}
+	]
+}

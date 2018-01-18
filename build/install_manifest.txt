@@ -1,0 +1,4 @@
+/Users/Jarred/Desktop/Programming/Taskly/_install/bin/Taskly
+/Users/Jarred/Desktop/Programming/Taskly/_install/include/Taskly/view.hpp
+/Users/Jarred/Desktop/Programming/Taskly/_install/share/Taskly/cmake/TasklyConfig.cmake
+/Users/Jarred/Desktop/Programming/Taskly/_install/share/Taskly/cmake/TasklyConfig-noconfig.cmake
