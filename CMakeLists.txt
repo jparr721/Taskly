@@ -8,6 +8,7 @@ find_package(Curses REQUIRED)
 
 add_library(${PROJECT_NAME}Lib
 	src/view.cpp
+	src/task.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Lib
