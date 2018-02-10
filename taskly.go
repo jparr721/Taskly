@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
@@ -18,6 +19,12 @@ var (
 	taskFocus *tview.Primitive
 )
 
+type task struct {
+	Title       string
+	DateAdded   time.Time
+	CompletedOn time.Time
+}
+
 func main() {
 	app = tview.NewApplication()
 	if err := app.Run(); err != nil {
@@ -25,8 +32,32 @@ func main() {
 	}
 }
 
-func createTask() {
+func addTask() {
+	form := tview.NewForm().
+		AddInputField("Title", "", 20, nil, nil).
+		AddInputField("Date Added", string(time.Now()), 20, nil, nil).
+		AddButton("Save", nil).
+		AddButton("Quit", func() {
+			app.Stop()
+		})
+	form.SetBorder(true).SetTitle("Create a new task").SetTitleAlign(tview.AlignCenter)
+	if err := app.SetRoot(form, true).SetFocus(form).Run(); err != nil {
+		panic(err)
+	}
+}
 
+func deleteTask() {
+	modal := tview.NewModal().
+		SetText("Do you want to delete this task?").
+		AddButtons([]string{"Yes", "Cancel"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "Yes" {
+				// Add the magic here
+			}
+		})
+	if err := app.SetRoot(modal, false).SetFocus(modal).Run(); err != nil {
+		panic(err)
+	}
 }
 
 func loadWindows() {
