@@ -12,7 +12,7 @@ namespace tetris {
   }
 
   void destroy_window(WINDOW* window) {
-    wborder(local_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+    wborder(window, ' ', ' ', ' ',' ',' ',' ',' ',' ');
     /* The parameters taken are
      * 1. win: the window on which to operate
      * 2. ls: character to be used for the left side of the window
@@ -24,7 +24,7 @@ namespace tetris {
      * 8. bl: character to be used for the bottom left corner of the window
      * 9. br: character to be used for the bottom right corner of the window
      */
-    wrefresh(local_win);
-    delwin(local_win);
+    wrefresh(window);
+    delwin(window);
   }
 }// namespace tetris
