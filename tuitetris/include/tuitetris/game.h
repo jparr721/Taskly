@@ -4,6 +4,9 @@
 namespace tetris {
 class Game {
   public:
+    int score;
+    int level;
+    int lines;
     int start();
 };
 } // namespace tetris

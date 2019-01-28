@@ -2,12 +2,14 @@
 #define TUITETRIS_INCLUDE_TUITETRIS_SCREEN_H
 
 #include <string>
+#include <memory>
+#include <ncurses.h>
 
 namespace tetris {
 class Screen {
   public:
-    void title_screen(std::string message);
-    void game_screen();
+    WINDOW* make_screen(int height, int width, int startx, int starty);
+    void destroy_window(WINDOW* window);
 };
 }// namespace tetris
 
