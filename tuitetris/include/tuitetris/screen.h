@@ -3,6 +3,7 @@
 
 #include <string>
 #include <tuitetris/game_piece.h>
+#include <tuitetris/game.h>
 #include <memory>
 #include <ncurses.h>
 
@@ -13,6 +14,10 @@ class Screen {
     void destroy_window(WINDOW* window);
     void display_score(WINDOW* w);
     void display_game_piece(WINDOW* w, const GamePiece g);
+    void make_game_board(WINDOW* w, const Game game);
+    void panic();
+
+    bool cell_filled(char cell_value);
 };
 }// namespace tetris
 
