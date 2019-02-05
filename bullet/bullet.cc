@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <ctime>
 #include <fstream>
 #include <filesystem>
@@ -5,6 +6,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <bullet/bullet.h>
+
+namespace fs = std::filesystem;
 
 namespace bullet {
   void Bullet::display_menu() {
@@ -16,7 +19,7 @@ namespace bullet {
    |  _ <| | | | | |/ _ \ __|    | |  | | '_ ` _ \ / _ \
    | |_) | |_| | | |  __/ |_     | |  | | | | | | |  __/
    |____/ \__,_|_|_|\___|\__|    |_|  |_|_| |_| |_|\___|
-    )"
+    )";
     int option = menu_opt_select();
 
     switch(option) {
@@ -25,9 +28,6 @@ namespace bullet {
         break;
       case 2:
         list_today();
-        break;
-      case 3:
-        list_prev();
         break;
       default:
         std::cout << "That's a weird option, man" << std::endl;
@@ -39,35 +39,35 @@ namespace bullet {
     int opt;
     std::cout << "1) New Entry" << std::endl;
     std::cout << "2) View Bullets For Today" << std::endl;
-    std::cout << "3) View Old Notes" << std::endl;
     std::cout << "Whattaya want to do? ";
     std::cin >> opt;
 
-    return std::stoi(opt);
+    return opt;
   }
 
   int Bullet::store_to_system(const Note& note) {
-    std::string filename = get_current_date + "bullets.txt";
-    std::fstream note_file(filename, std::filestream::app);
+    std::string filename = get_current_date() + "bullets.txt";
+    std::fstream note_file(filename, std::fstream::app);
 
-    if (!note_file.good()) { throw std::invliad_argument("Invalid path specified"); }
+    if (!note_file.good()) { throw std::invalid_argument("Invalid path specified"); }
 
     note_file << note;
     return 0;
   }
 
-  int Bullet::get_last_id() {
+  int Bullet::get_last_id(const std::string& file) {
     // TODO
+    return 1;
   }
 
   Note Bullet::new_bullet() {
-    std::ostream os;
+    std::stringstream os;
     Note n;
     std::string task_field;
     std::string task_type;
     std::cout << "What would you like to get done? ";
     std::cin >> task_field;
-    std::for_each(_config.begin(), _config.end(), [&os](const auto& d) { os << d->second << " " });
+    std::for_each(_config.begin(), _config.end(), [&os](const auto& d) { os << d.second << " "; });
 
     std::cout << std::endl;
     std::cout << "Options: " << os.str() << std::endl;
@@ -91,8 +91,8 @@ namespace bullet {
       new_bullet();
     } else if (std::string(argv[1]) == "list" && !argv[2]) {
       list_today();
-    } else if (std::string(argv[1] == "list" && argv[2]) {
-      list_prev();
+    } else if (std::string(argv[1]) == "list" && argv[2]) {
+      list_prev(std::string(argv[2]));
     } else {
       std::cout << "invalid option specified" << std::endl;
       return EXIT_FAILURE;
@@ -101,16 +101,24 @@ namespace bullet {
     return EXIT_SUCCESS;
   }
 
-  void check_dir() {
+  void Bullet::check_dir() {
     std::string bullet_dir = _config["BULLET_PATH"];
-    if (!std::filesystem::is_directory(bullet_dir) || !std::filesystem::exists(bullet_dir)) {
+    if (!fs::is_directory(bullet_dir) || !fs::exists(bullet_dir)) {
       std::cout << "Dir not found, making" << std::endl;
-      std::filesystem::create_directory(bullet_path);
+      fs::create_directory(bullet_dir);
     }
   }
 
-  std::string get_current_date() {
-    std::ostream os;
+  void Bullet::list_today() {
+    std::cout << "yuh" << std::endl;
+  }
+
+  void Bullet::list_prev(const std::string& date) {
+    std::cout << "yuh2" << std::endl;
+  }
+
+  std::string Bullet::get_current_date() {
+    std::stringstream os;
     time_t now = time(0);
     tm *ltm = localtime(&now);
 

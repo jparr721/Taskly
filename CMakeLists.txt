@@ -9,10 +9,14 @@ set(CMAKE_EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib})
 
 include_directories("${PROJECT_SOURCE_DIR}/bullet/include")
-
 add_executable(${PROJECT_NAME}
   "${PROJECT_SOURCE_DIR}/bullet/main.cc"
   "${PROJECT_SOURCE_DIR}/bullet/bullet.cc"
   "${PROJECT_SOURCE_DIR}/bullet/note.cc"
   "${PROJECT_SOURCE_DIR}/bullet/config.cc"
+)
+
+target_link_libraries(
+  ${PROJECT_NAME}
+  stdc++fs
 )

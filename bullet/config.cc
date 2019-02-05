@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <bullet/config.h>
 

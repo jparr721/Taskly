@@ -1,5 +1,4 @@
-#ifndef BULLET_INCLUDE_BULLET_NOTE_H
-#define BULLET_INCLUDE_BULLET_NOTE_H
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -7,6 +6,16 @@
 
 namespace bullet {
   struct Note {
+    enum class BulletType {
+      deferred,
+      today,
+      future,
+      goal,
+      event
+    };
+
+    Note() = default;
+    ~Note() = default;
     int id;
 
     std::string type;
@@ -16,10 +25,8 @@ namespace bullet {
 
     Note(std::unordered_map<std::string, std::string> config) : _config(config) {};
 
-    char convert_type();
+    std::string convert_type(const BulletType& t);
 
     friend std::ostream& operator<<(std::ostream& os, Note const& n);
   };
 } // namespace bullet
-
-#endif

@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv) {
   bullet::Config config;
-  bullet::Bullet journal(config.parse_opts());
+  bullet::Bullet journal(config.parse_config());
 
 
   return journal.parse_opts(argc, argv);

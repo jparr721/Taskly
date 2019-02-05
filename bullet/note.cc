@@ -7,22 +7,22 @@ namespace bullet {
     return os;
   }
 
-  std::string convert_type(const BulletType& t) {
+  std::string Note::convert_type(const BulletType& t) {
     switch(t) {
-      case t::deferred:
-        return _config["DEFERRED"]
+      case BulletType::deferred:
+        return _config["DEFERRED"];
         break;
-      case t::today:
-        return _config["TODAY"]
+      case BulletType::today:
+        return _config["TODAY"];
         break;
-      case t::future:
-        return _config["FUTURE"]
+      case BulletType::future:
+        return _config["FUTURE"];
         break;
-      case t::goal:
-        return _config["GOAL"]
+      case BulletType::goal:
+        return _config["GOAL"];
         break;
-      case t::event:
-        return _config["EVENT"]
+      case BulletType::event:
+        return _config["EVENT"];
         break;
       default:
         return "";

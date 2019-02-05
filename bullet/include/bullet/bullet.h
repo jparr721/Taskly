@@ -1,5 +1,4 @@
-#ifndef BULLET_INCLUDE_BULLET_BULLET_H
-#define BULLET_INCLUDE_BULLET_BULLET_H
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -20,7 +19,7 @@ namespace bullet {
       int menu_opt_select();
       int delete_bullet();
 
-      void list_prev(const std::string date);
+      void list_prev(const std::string& date);
       void list_today();
 
 
@@ -29,9 +28,7 @@ namespace bullet {
       void display_menu();
 
     private:
-      int store_to_system();
-      int check_dir();
+      int store_to_system(const Note& note);
+      void check_dir();
   };
 } // namespace bullet
-
-#endif
