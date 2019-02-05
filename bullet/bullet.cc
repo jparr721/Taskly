@@ -1,9 +1,10 @@
-#include <bullet/bullet.h>
 #include <ctime>
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <bullet/bullet.h>
 
 namespace bullet {
   void Bullet::display_menu() {
@@ -83,7 +84,7 @@ namespace bullet {
   int Bullet::parse_opts(int argc, char** argv) {
     if (!argv[1]) {
       display_menu();
-      return;
+      return EXIT_SUCCESS;
     }
 
     if (std::string(argv[1]) == "new") {
@@ -94,7 +95,17 @@ namespace bullet {
       list_prev();
     } else {
       std::cout << "invalid option specified" << std::endl;
-      return;
+      return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  void check_dir() {
+    std::string bullet_dir = _config["BULLET_PATH"];
+    if (!std::filesystem::is_directory(bullet_dir) || !std::filesystem::exists(bullet_dir)) {
+      std::cout << "Dir not found, making" << std::endl;
+      std::filesystem::create_directory(bullet_path);
     }
   }
 

@@ -5,14 +5,13 @@
 #include <unordered_map>
 #include <vector>
 #include <bullet/note.h>
-#include <bullet/config.h>
 
 namespace bullet {
   class Bullet {
     public:
       std::unordered_map<std::string, std::string> _config;
 
-      Bullet(std::unordered_map<std::string, std::string config) : _config(config) {};
+      Bullet(std::unordered_map<std::string, std::string> config) : _config(config) {};
 
       std::string get_current_date();
 
@@ -23,6 +22,7 @@ namespace bullet {
 
       void list_prev(const std::string date);
       void list_today();
+
 
       Note new_bullet();
 

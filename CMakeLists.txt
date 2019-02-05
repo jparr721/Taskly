@@ -12,4 +12,7 @@ include_directories("${PROJECT_SOURCE_DIR}/bullet/include")
 
 add_executable(${PROJECT_NAME}
   "${PROJECT_SOURCE_DIR}/bullet/main.cc"
+  "${PROJECT_SOURCE_DIR}/bullet/bullet.cc"
+  "${PROJECT_SOURCE_DIR}/bullet/note.cc"
+  "${PROJECT_SOURCE_DIR}/bullet/config.cc"
 )

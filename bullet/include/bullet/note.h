@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include <unordered_map>
-#include <bullet/config.h>
 
 namespace bullet {
   struct Note {

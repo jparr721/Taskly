@@ -1,6 +1,5 @@
 #include <fstream>
 #include <stdexcept>
-
 #include <bullet/config.h>
 
 namespace bullet {

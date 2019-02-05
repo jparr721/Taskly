@@ -1,7 +1,8 @@
 #include <bullet/bullet.h>
+#include <bullet/config.h>
 
 int main(int argc, char** argv) {
-  bullet::Bullet config;
+  bullet::Config config;
   bullet::Bullet journal(config.parse_opts());
 
 
