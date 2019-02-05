@@ -1,4 +1,4 @@
-# TuiTetris
+# Bullet-Time
 ✏️ Bullet journaling in the command line
 
 ## Compiling
