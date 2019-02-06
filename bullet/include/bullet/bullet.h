@@ -29,6 +29,5 @@ namespace bullet {
 
     private:
       int store_to_system(const Note& note);
-      void check_dir();
   };
 } // namespace bullet

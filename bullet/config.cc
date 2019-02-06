@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+
+#include <bullet/bullet.h>
 #include <bullet/config.h>
 
 namespace bullet {
@@ -9,7 +11,7 @@ namespace bullet {
     const std::string bullet_path = DEFAULTS.at("BULLET_PATH");
 
     std::ofstream config(bullet_path + "/config");
-    if (!config.good()) { throw std::invalid_argument("Invalid path specified"); }
+    if (!config.good()) { throw std::invalid_argument("Invalid path specified inside of reset()"); }
     for(const auto& v : DEFAULTS) {
       config << v.first << ": " << v.second;
     }
@@ -21,7 +23,7 @@ namespace bullet {
     std::cout << "Opening file located in: " << config_path << std::endl;
     std::ifstream config(config_path);
 
-    if (!config.good()) { throw std::invalid_argument("Invalid path specified"); }
+    if (!config.good()) { throw std::invalid_argument("Invalid path specified inside of parse_config()"); }
     std::unordered_map<std::string, std::string> config_data;
     std::string line;
     std::string delimeter = ":";

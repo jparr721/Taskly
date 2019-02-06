@@ -1,13 +1,11 @@
 #include <algorithm>
 #include <ctime>
 #include <fstream>
-#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <bullet/bullet.h>
 
-namespace fs = std::filesystem;
 
 namespace bullet {
   void Bullet::display_menu() {
@@ -82,6 +80,7 @@ namespace bullet {
 
   /// Parse args as they come in
   int Bullet::parse_opts(int argc, char** argv) {
+    check_dir();
     if (!argv[1]) {
       display_menu();
       return EXIT_SUCCESS;
@@ -99,14 +98,6 @@ namespace bullet {
     }
 
     return EXIT_SUCCESS;
-  }
-
-  void Bullet::check_dir() {
-    std::string bullet_dir = _config["BULLET_PATH"];
-    if (!fs::is_directory(bullet_dir) || !fs::exists(bullet_dir)) {
-      std::cout << "Dir not found, making" << std::endl;
-      fs::create_directory(bullet_dir);
-    }
   }
 
   void Bullet::list_today() {

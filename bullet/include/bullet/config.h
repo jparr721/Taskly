@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdlib>
 #include <string>
 #include <unordered_map>
 
@@ -17,6 +18,6 @@ namespace bullet {
       };
 
       void reset();
-      std::unordered_map<std::string, std::string> parse_config(const std::string& config_path="~/.bullet/config");
+      std::unordered_map<std::string, std::string> parse_config(const std::string& config_path);
   };
 } // namespace bullet
