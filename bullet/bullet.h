@@ -1,8 +1,7 @@
 #ifndef BULLET_H_
 #define BULLET_H_
 
-#include <algorithm>
-#include <cmath>
+#include <array>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -11,14 +10,13 @@
 #include <vector>
 
 namespace bullet {
-  using symbol_map = std::unordered_map<std::string, std::string>;
-  using option_map =
-    std::unordered_map<std::string_view, std::optional<std::string_view>>;
+using symbol_map = std::unordered_map<std::string, std::string>;
+using option_map =
+  std::unordered_map<std::string_view, std::optional<std::string_view>>;
+namespace parser {
 
   struct parser {
     // Heavily adapted from: https://github.com/sailormoon/flags/blob/master/include/flags.h
-    const std::array<std::string, 4> avail_options{{"new", "list", "find", "reset"}};
-
     parser(const int argc, char** argv);
 
     parser& operator=(const parser&) = delete;
@@ -36,22 +34,18 @@ namespace bullet {
     std::vector<std::string_view> positionals_;
     option_map optionals_;
   };
+} // namespace parser
 
   class Bullet {
     public:
-      const symbol_map default_symbols{
-        {"deferred", "<"},
-        {"future", ">"},
-        {"today", "*"},
-        {"goal", "^"},
-        {"event", "o"},
-        {"done", "x"},
-      };
+      Bullet(
+          const option_map& optionals,
+          const std::vector<std::string_view>& positionals)
+        : optionals_(optionals), positionals_(positionals) {};
 
-      int get_last_id(const std::string& journal);
+      const std::string get_current_date() const;
 
-
-      std::string get_current_date();
+      const std::array<std::string, 6> default_symbols{{ "<", ">", "*", "^", "o", "x"}};
     private:
       struct Note {
         std::string note;
@@ -59,8 +53,17 @@ namespace bullet {
         int id;
       };
 
-      void display_menu();
+      void display_menu() const;
+      void check_dir() const;
       void write(const Note& note);
+
+      int get_last_id();
+
+      Note new_note() const;
+
+      const std::array<std::string, 4> avail_options{{"new", "list", "find", "reset"}};
+      option_map optionals_;
+      std::vector<std::string_view> positionals_;
   };
 } // namespace bullet
 

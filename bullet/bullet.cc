@@ -1,6 +1,14 @@
+#include <ctime>
+#include <cstdlib>
+#include <filesystem>
+#include <sstream>
+
 #include "bullet.h"
 
+using fs = std::filesystem;
+
 namespace bullet {
+namespace parser {
   parser::parser(const int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
       parse(argv[i]);
@@ -46,5 +54,50 @@ namespace bullet {
 
   const std::vector<std::string_view>& parser::positional_arguments() const {
     return positionals_;
+  }
+} // namespace parser
+
+  void Bullet::check_dir() const {
+    const std::string dir = std::string(std::getenv("HOME")) + "/.bullet";
+
+    if (!fs::is_directory(dir) || !fs::exists(dir)) {
+      std::cout << "No .bullet dir found, creating" << std::endl;
+      fs::create_directory(dir);
+    }
+
+    return;
+  }
+
+  Note Bullet::new_note() const {
+    size_t type;
+    std::string note;
+    Note n;
+    std::cout << "1. deferred\n" <<
+              << "2. future\n" <<
+              << "3. task\n" <<
+              << "4. goal\n" <<
+              << "5. event\n" <<
+              << "6. done" << std::endl;
+    std::cout << "What type of note is this?";
+    std::cin >> type;
+
+    std::cout << "Gimme the goods" << std::endl;
+    std::getline(std::cin, note);
+
+    n.note = note;
+    n.symbol = default_symbols(type - 1);
+    n.id = get_last_id() + 1;
+
+    return n;
+  }
+
+  const std::string Bullet::get_current_date() const {
+    std::stringstream os;
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    os << ltm->tm_year << "-" << ltm->tm_mon << "-" << ltm->tm_mday;
+
+    return os.str();
   }
 }// namespace bullet
