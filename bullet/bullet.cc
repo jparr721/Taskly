@@ -5,7 +5,7 @@
 
 #include "bullet.h"
 
-using fs = std::filesystem;
+namespace fs = std::filesystem;
 
 namespace bullet {
 namespace parser {
@@ -18,7 +18,7 @@ namespace parser {
   }
 
   void parser::parse(const std::string_view& item) {
-    item.at(0) == '-' ? flag(item) : value(item)
+    item.at(0) == '-' ? flag(item) : value(item);
   }
 
   void parser::flag(const std::string_view& item) {
@@ -30,10 +30,10 @@ namespace parser {
     // Packed args
     const auto delimiter = current_option_->find_first_not_of('-');
     if (delimiter != std::string_view::npos) {
-      auto value = *current_option_;
-      value.remove_prefix(delimiter + 1);
+      auto val = *current_option_;
+      val.remove_prefix(delimiter + 1);
       current_option_->remove_suffix(current_option_->size() - delimiter);
-      value(value);
+      value(val);
     }
   }
 
@@ -73,11 +73,11 @@ namespace parser {
     std::string note;
     Note n;
     std::cout << "1. deferred\n" <<
-              << "2. future\n" <<
-              << "3. task\n" <<
-              << "4. goal\n" <<
-              << "5. event\n" <<
-              << "6. done" << std::endl;
+              "2. future\n" <<
+              "3. task\n" <<
+              "4. goal\n" <<
+              "5. event\n" <<
+              "6. done" << std::endl;
     std::cout << "What type of note is this?";
     std::cin >> type;
 

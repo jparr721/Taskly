@@ -1,8 +1,8 @@
 # -*- python -*-
 
 main = executable(
-    'bullet',
+    'bt',
     files=find_files('bullet', '*.cc', extra='*.h'),
-    compile_options(
-      ['std=c++1z', '-Wall', '-Werror', '-Wextra', '-pedantic']),
-    link_options=['-libstdc++fs'])
+    compile_options=(
+      ['-std=c++1z', '-Wall', '-Werror', '-Wextra', '-pedantic', '-lstdc++fs']),
+    link_options=['-lstdc++fs'])

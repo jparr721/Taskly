@@ -22,7 +22,7 @@ namespace parser {
     parser& operator=(const parser&) = delete;
 
     const option_map& options() const;
-    const std:;vector<std::string_view>& positional_arguments() const;
+    const std::vector<std::string_view>& positional_arguments() const;
 
     private:
     void flush();
@@ -36,6 +36,11 @@ namespace parser {
   };
 } // namespace parser
 
+  struct Note {
+    std::string note;
+    std::string symbol;
+    int id;
+  };
   class Bullet {
     public:
       Bullet(
@@ -46,13 +51,8 @@ namespace parser {
       const std::string get_current_date() const;
 
       const std::array<std::string, 6> default_symbols{{ "<", ">", "*", "^", "o", "x"}};
-    private:
-      struct Note {
-        std::string note;
-        std::string symbol;
-        int id;
-      };
 
+    private:
       void display_menu() const;
       void check_dir() const;
       void write(const Note& note);
