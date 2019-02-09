@@ -36,22 +36,18 @@ namespace parser {
   };
 } // namespace parser
 
-  struct Note {
-    std::string note;
-    std::string symbol;
-    int id;
-  };
+  // Forward declare to avoid errors
   class Bullet {
     public:
+      struct Note {
+        std::string note;
+        std::string symbol;
+        int id;
+      };
       Bullet(
           const option_map& optionals,
           const std::vector<std::string_view>& positionals)
         : optionals_(optionals), positionals_(positionals) {};
-
-      const std::string get_current_date() const;
-
-      const std::array<std::string, 6> default_symbols{{ "<", ">", "*", "^", "o", "x"}};
-
     private:
       void display_menu() const;
       void check_dir() const;
@@ -59,9 +55,12 @@ namespace parser {
 
       int get_last_id();
 
-      Note new_note() const;
+      const std::string get_current_date() const;
+
+      Note new_note();
 
       const std::array<std::string, 4> avail_options{{"new", "list", "find", "reset"}};
+      const std::array<std::string, 6> default_symbols{{ "<", ">", "*", "^", "o", "x"}};
       option_map optionals_;
       std::vector<std::string_view> positionals_;
   };

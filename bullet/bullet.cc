@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <ctime>
 #include <cstdlib>
 #include <filesystem>
@@ -31,7 +32,7 @@ namespace parser {
     const auto delimiter = current_option_->find_first_not_of('-');
     if (delimiter != std::string_view::npos) {
       auto val = *current_option_;
-      val.remove_prefix(delimiter + 1);
+      val.remove_prefix(delimiter);
       current_option_->remove_suffix(current_option_->size() - delimiter);
       value(val);
     }
@@ -68,7 +69,11 @@ namespace parser {
     return;
   }
 
-  Note Bullet::new_note() const {
+  int Bullet::get_last_id() {
+    return 1;
+  }
+
+  Bullet::Note Bullet::new_note() {
     size_t type;
     std::string note;
     Note n;
@@ -85,7 +90,7 @@ namespace parser {
     std::getline(std::cin, note);
 
     n.note = note;
-    n.symbol = default_symbols(type - 1);
+    n.symbol = default_symbols[type - 1];
     n.id = get_last_id() + 1;
 
     return n;
@@ -100,4 +105,14 @@ namespace parser {
 
     return os.str();
   }
-}// namespace bullet
+} // namespace bullet
+
+int main(int argc, char** argv) {
+  bullet::parser::parser p(argc, argv);
+  auto value = p.options();
+  for (auto it = value.begin(); it != value.end(); ++it) {
+    std::cout << it->first << " " << *it->second << std::endl;
+  }
+  bullet::Bullet bullet(p.options(), p.positional_arguments());
+  return EXIT_SUCCESS;
+}
