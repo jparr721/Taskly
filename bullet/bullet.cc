@@ -1,114 +1,102 @@
 #include <algorithm>
 #include <ctime>
-#include <fstream>
-#include <iostream>
+#include <cstdlib>
+#include <filesystem>
 #include <sstream>
-#include <stdexcept>
-#include <bullet/bullet.h>
 
+#include "bullet.h"
+
+namespace fs = std::filesystem;
 
 namespace bullet {
-  void Bullet::display_menu() {
-    const std::string s =
-    R"(
-    ____        _ _      _     _______ _
-   |  _ \      | | |    | |   |__   __(_)
-   | |_) |_   _| | | ___| |_     | |   _ _ __ ___   ___
-   |  _ <| | | | | |/ _ \ __|    | |  | | '_ ` _ \ / _ \
-   | |_) | |_| | | |  __/ |_     | |  | | | | | | |  __/
-   |____/ \__,_|_|_|\___|\__|    |_|  |_|_| |_| |_|\___|
-    )";
-    int option = menu_opt_select();
+namespace parser {
+  parser::parser(const int argc, char** argv) {
+    for (int i = 1; i < argc; ++i) {
+      parse(argv[i]);
+    }
 
-    switch(option) {
-      case 1:
-        new_bullet();
-        break;
-      case 2:
-        list_today();
-        break;
-      default:
-        std::cout << "That's a weird option, man" << std::endl;
-        break;
+    flush();
+  }
+
+  void parser::parse(const std::string_view& item) {
+    item.at(0) == '-' ? flag(item) : value(item);
+  }
+
+  void parser::flag(const std::string_view& item) {
+    // Strip off flag and keep the word
+    flush();
+    current_option_ = item;
+    current_option_->remove_prefix(current_option_->find_first_not_of('-'));
+
+    // Packed args
+    const auto delimiter = current_option_->find_first_not_of('-');
+    if (delimiter != std::string_view::npos) {
+      auto val = *current_option_;
+      val.remove_prefix(delimiter);
+      current_option_->remove_suffix(current_option_->size() - delimiter);
+      value(val);
     }
   }
 
-  int Bullet::menu_opt_select() {
-    int opt;
-    std::cout << "1) New Entry" << std::endl;
-    std::cout << "2) View Bullets For Today" << std::endl;
-    std::cout << "Whattaya want to do? ";
-    std::cin >> opt;
-
-    return opt;
+  void parser::value(const std::optional<std::string_view>& value) {
+    if (!current_option_) {
+      positionals_.emplace_back(*value);
+    } else {
+      optionals_.emplace(*current_option_, value);
+      current_option_.reset();
+    }
   }
 
-  int Bullet::store_to_system(const Note& note) {
-    std::string filename = get_current_date() + "bullets.txt";
-    std::fstream note_file(filename, std::fstream::app);
-
-    if (!note_file.good()) { throw std::invalid_argument("Invalid path specified"); }
-
-    note_file << note;
-    return 0;
+  void parser::flush() {
+    if (current_option_) value();
   }
 
-  int Bullet::get_last_id(const std::string& file) {
-    // TODO
+  const option_map& parser::options() const { return optionals_; }
+
+  const std::vector<std::string_view>& parser::positional_arguments() const {
+    return positionals_;
+  }
+} // namespace parser
+
+  void Bullet::check_dir() const {
+    const std::string dir = std::string(std::getenv("HOME")) + "/.bullet";
+
+    if (!fs::is_directory(dir) || !fs::exists(dir)) {
+      std::cout << "No .bullet dir found, creating" << std::endl;
+      fs::create_directory(dir);
+    }
+
+    return;
+  }
+
+  int Bullet::get_last_id() {
     return 1;
   }
 
-  Note Bullet::new_bullet() {
-    std::stringstream os;
+  Bullet::Note Bullet::new_note() {
+    size_t type;
+    std::string note;
     Note n;
-    std::string task_field;
-    std::string task_type;
-    std::cout << "What would you like to get done? ";
-    std::cin >> task_field;
-    std::for_each(_config.begin(), _config.end(), [&os](const auto& d) { os << d.second << " "; });
+    std::cout << "1. deferred\n" <<
+              "2. future\n" <<
+              "3. task\n" <<
+              "4. goal\n" <<
+              "5. event\n" <<
+              "6. done" << std::endl;
+    std::cout << "What type of note is this?";
+    std::cin >> type;
 
-    std::cout << std::endl;
-    std::cout << "Options: " << os.str() << std::endl;
-    std::cout << "What type of task is this? ";
-    std::cin >> task_type;
+    std::cout << "Gimme the goods" << std::endl;
+    std::getline(std::cin, note);
 
-    n.type = task_type;
-    n.note = task_field;
+    n.note = note;
+    n.symbol = default_symbols[type - 1];
+    n.id = get_last_id() + 1;
 
     return n;
   }
 
-  /// Parse args as they come in
-  int Bullet::parse_opts(int argc, char** argv) {
-    check_dir();
-    if (!argv[1]) {
-      display_menu();
-      return EXIT_SUCCESS;
-    }
-
-    if (std::string(argv[1]) == "new") {
-      new_bullet();
-    } else if (std::string(argv[1]) == "list" && !argv[2]) {
-      list_today();
-    } else if (std::string(argv[1]) == "list" && argv[2]) {
-      list_prev(std::string(argv[2]));
-    } else {
-      std::cout << "invalid option specified" << std::endl;
-      return EXIT_FAILURE;
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  void Bullet::list_today() {
-    std::cout << "yuh" << std::endl;
-  }
-
-  void Bullet::list_prev(const std::string& date) {
-    std::cout << "yuh2" << std::endl;
-  }
-
-  std::string Bullet::get_current_date() {
+  const std::string Bullet::get_current_date() const {
     std::stringstream os;
     time_t now = time(0);
     tm *ltm = localtime(&now);
@@ -118,3 +106,13 @@ namespace bullet {
     return os.str();
   }
 } // namespace bullet
+
+int main(int argc, char** argv) {
+  bullet::parser::parser p(argc, argv);
+  auto value = p.options();
+  for (auto it = value.begin(); it != value.end(); ++it) {
+    std::cout << it->first << " " << *it->second << std::endl;
+  }
+  bullet::Bullet bullet(p.options(), p.positional_arguments());
+  return EXIT_SUCCESS;
+}
