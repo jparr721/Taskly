@@ -2,10 +2,11 @@
 #define BULLET_H_
 
 #include <array>
+#include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <iostream>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 
@@ -43,23 +44,37 @@ namespace parser {
         std::string note;
         std::string symbol;
         int id;
+        std::string str() {
+          std::ostringstream os;
+
+          os << id << " " << symbol << " " << note;
+
+          return os.str();
+        }
       };
       Bullet(
           const option_map& optionals,
           const std::vector<std::string_view>& positionals)
         : optionals_(optionals), positionals_(positionals) {};
+      void check_dir() const;
+      void handle_args();
     private:
       void display_menu() const;
-      void check_dir() const;
-      void write(const Note& note);
+      void write(Note& note);
+      void show_usage() const;
+      void get_todays_notes();
+      void get_previous_notes(const std::string notefile);
 
       int get_last_id();
 
       const std::string get_current_date() const;
+      const std::string make_source_path(const std::optional<std::string_view>& date = std::nullopt) const;
+
+      const std::vector<std::string> read_file_line_by_line(const std::string& filename) const;
 
       Note new_note();
 
-      const std::array<std::string, 4> avail_options{{"new", "list", "find", "reset"}};
+      const std::array<std::string, 4> avail_options{{"new", "list", "reset"}};
       const std::array<std::string, 6> default_symbols{{ "<", ">", "*", "^", "o", "x"}};
       option_map optionals_;
       std::vector<std::string_view> positionals_;

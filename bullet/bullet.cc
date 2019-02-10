@@ -2,7 +2,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <filesystem>
-#include <sstream>
+#include <fstream>
 
 #include "bullet.h"
 
@@ -65,12 +65,52 @@ namespace parser {
       std::cout << "No .bullet dir found, creating" << std::endl;
       fs::create_directory(dir);
     }
+  }
 
-    return;
+  void Bullet::show_usage() const {
+    const std::string help =
+     "Bullet v1.0 - The Terminal Task Tracker!\n"
+     "  bullet new              - Make a new bullet\n"
+     "  bullet list             - List today's bullets\n"
+     "  bullet list <FILE_NAMe> - List any previous bullets file (fmt. YYYY-MM-DD)\n";
+
+    std::cout << help << std::endl;
+  }
+
+  void Bullet::handle_args() {
+    bool invalid =
+      std::any_of(positionals_.begin(), positionals_.end(), [this](const auto& positional) {
+        return std::find(avail_options.begin(), avail_options.end(), positional) == avail_options.end();
+      });
+    if (invalid) {
+      std::cerr << "Invalid option detected!" << std::endl;
+      show_usage();
+    }
+    const auto first = positionals_[0];
+    const auto second = postionals_[1];
+
+    if (first == "new") {
+      // Discard other opts, go into new note func
+      new_note();
+    }
+
+    if (first == "list") {
+      if (!second.isEmpty()) {
+        get_previous_notes(second + "-notes");
+      } else {
+        get_todays_notes();
+      }
+    }
+  }
+
+  void Bullet::write(Note& note) {
+    const std::string note_path = make_source_path();
+    std::ofstream notefile(note_path, std::ios_base::app);
+    notefile << note.str();
   }
 
   int Bullet::get_last_id() {
-    return 1;
+    const std::vector<std::string> journal_lines = read_file_line_by_line(
   }
 
   Bullet::Note Bullet::new_note() {
@@ -96,6 +136,10 @@ namespace parser {
     return n;
   }
 
+  const std::string Bullet::make_source_path(const std::optional<std::string_view>& date) const {
+    return date ? get_current_date + "-notes" : *date + "-notes";
+  }
+
   const std::string Bullet::get_current_date() const {
     std::stringstream os;
     time_t now = time(0);
@@ -105,14 +149,26 @@ namespace parser {
 
     return os.str();
   }
+
+  const std::vector<std::string> Bullet::read_file_line_by_line(const std::string& filename) const {
+    std::ifstream input(filename);
+    std::vector<std::string> lines;
+    if (!input.good()) throw std::invalid_argument("Invalid path specified");
+
+    std::string line;
+    while (std::getline(input, line)) {
+      std::istringstream iss(line);
+      lines.push_back(std::string(iss.str()));
+    }
+
+    return lines;
+  }
 } // namespace bullet
 
 int main(int argc, char** argv) {
   bullet::parser::parser p(argc, argv);
-  auto value = p.options();
-  for (auto it = value.begin(); it != value.end(); ++it) {
-    std::cout << it->first << " " << *it->second << std::endl;
-  }
   bullet::Bullet bullet(p.options(), p.positional_arguments());
+  bullet.handle_args();
+  bullet.check_dir();
   return EXIT_SUCCESS;
 }

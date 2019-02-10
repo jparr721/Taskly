@@ -3,5 +3,5 @@
 main = executable(
     'bt',
     files=find_files('bullet', '*.cc', extra='*.h'),
-    compile_options=(['-std=c++1z', '-Wall', '-Werror', '-Wextra', '-pedantic']),
+    compile_options=(['-std=c++1z', '-Wall']),
     link_options=['-lstdc++fs'])
