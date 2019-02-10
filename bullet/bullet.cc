@@ -96,7 +96,7 @@ namespace parser {
 
     if (first == "list") {
       if (!second.isEmpty()) {
-        get_previous_notes(second + "-notes");
+        get_previous_notes(make_source_path(second));
       } else {
         get_todays_notes();
       }
