@@ -37,7 +37,6 @@ namespace parser {
   };
 } // namespace parser
 
-  // Forward declare to avoid errors
   class Bullet {
     public:
       struct Note {

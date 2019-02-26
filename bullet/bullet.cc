@@ -87,7 +87,7 @@ namespace parser {
       show_usage();
     }
     const auto first = positionals_[0];
-    const auto second = postionals_[1];
+    const auto second = positionals_[1];
 
     if (first == "new") {
       // Discard other opts, go into new note func
@@ -95,13 +95,17 @@ namespace parser {
     }
 
     if (first == "list") {
-      if (!second.isEmpty()) {
+      if (!second.empty()) {
         get_previous_notes(make_source_path(second));
       } else {
         get_todays_notes();
       }
     }
   }
+
+  void Bullet::get_todays_notes() {}
+
+  void Bullet::get_previous_notes(const std::string notefile) {}
 
   void Bullet::write(Note& note) {
     const std::string note_path = make_source_path();
@@ -110,7 +114,8 @@ namespace parser {
   }
 
   int Bullet::get_last_id() {
-    const std::vector<std::string> journal_lines = read_file_line_by_line(
+    /* const std::vector<std::string> journal_lines = read_file_line_by_line( */
+    return 1;
   }
 
   Bullet::Note Bullet::new_note() {
@@ -137,7 +142,7 @@ namespace parser {
   }
 
   const std::string Bullet::make_source_path(const std::optional<std::string_view>& date) const {
-    return date ? get_current_date + "-notes" : *date + "-notes";
+    return date ? get_current_date() + "-notes" : std::string(*date) + "-notes";
   }
 
   const std::string Bullet::get_current_date() const {
